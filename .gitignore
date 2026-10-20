@@ -1,0 +1,66 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ===== 虚拟环境 =====
+.venv/
+venv/
+env/
+ENV/
+.conda/
+.python-version
+
+# ===== 测试/检查缓存 =====
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+
+# ===== 打包产物 =====
+*.spec
+# 如果使用 PyInstaller，build/ 和 dist/ 已在上方忽略
+
+# ===== IDE / 编辑器 =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.vim/
+*.user
+*.user.*
+CMakeLists.txt.user
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 日志和临时文件 =====
+*.log
+*.tmp
+*.bak
+*.cache
+tmp/
+temp/
+
+# ===== 项目本地配置（如果存在）=====
+.env
+.env.*
+!.env.example
