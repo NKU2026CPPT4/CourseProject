@@ -37,6 +37,3 @@ CourseProject/
 └── docs/                       # Documentation
     └── test_cases.md           # Detailed test cases documentation
 ```
-
-## Test doc
-Test
