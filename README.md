@@ -39,4 +39,3 @@ CourseProject/
 ```
 
 ## Test doc
-Test
