@@ -12,7 +12,7 @@ CourseProject/
 │   ├── core/                   # Pure algorithms and models (NO Qt dependency)
 │   │   ├── Cell.h              # Cell type definitions (Wall, Passage, Start, Goal)
 │   │   ├── MazeMap.h/.cpp      # Grid data structure, start/goal points, bounds checking
-│   │   ├── RecursiveDivisionGenerator.h/.cpp  # Maze generation algorithm
+│   │   ├── DFSGenerator.h/.cpp  # Maze generation algorithm
 │   │   └── AStarSolver.h/.cpp  # A* pathfinding algorithm, outputs search steps
 │   │
 │   ├── ui/                     # Qt GUI 
@@ -37,5 +37,3 @@ CourseProject/
 └── docs/                       # Documentation
     └── test_cases.md           # Detailed test cases documentation
 ```
-
-## Test doc
