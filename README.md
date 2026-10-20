@@ -1,5 +1,5 @@
 # 人工智能与创新 (C++) 大作业
-递归分割迷宫生成与A*寻路算法的可视化实现——基于Qt的交互式平台
+基于深度优先搜索的随机迷宫生成与A*寻路算法的可视化实现——基于Qt的交互式平台
 
 ## Project Structure
 ```text
@@ -12,7 +12,7 @@ CourseProject/
 │   ├── core/                   # Pure algorithms and models (NO Qt dependency)
 │   │   ├── Cell.h              # Cell type definitions (Wall, Passage, Start, Goal)
 │   │   ├── MazeMap.h/.cpp      # Grid data structure, start/goal points, bounds checking
-│   │   ├── RecursiveDivisionGenerator.h/.cpp  # Maze generation algorithm
+│   │   ├── DFSGenerator.h/.cpp  # Maze generation algorithm
 │   │   └── AStarSolver.h/.cpp  # A* pathfinding algorithm, outputs search steps
 │   │
 │   ├── ui/                     # Qt GUI 

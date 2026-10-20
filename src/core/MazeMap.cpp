@@ -1,7 +1,8 @@
 #include "core/MazeMap.h"
 
-MazeMap::MazeMap(const int rows, const int cols) : rows_(rows), cols_(cols) {
-    grid_ = std::vector<std::vector<CellType>>(rows, std::vector<CellType>(cols, CellType::Wall));
+MazeMap::MazeMap(const int rows, const int cols)
+    : rows_(rows), cols_(cols),
+      grid_(rows, std::vector(cols, CellType::Wall)) {
 }
 
 int MazeMap::rows() const {
@@ -14,6 +15,10 @@ int MazeMap::cols() const {
 
 bool MazeMap::inBound(const int row, const int col) const {
     return row >= 0 && row < rows_ && col >= 0 && col < cols_;
+}
+
+bool MazeMap::inInnerBound(const int row, const int col) const {
+    return row > 0 && row < rows_ - 1 && col > 0 && col < cols_ - 1;
 }
 
 CellType MazeMap::at(const int row, const int col) const {
