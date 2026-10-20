@@ -26,6 +26,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 add_executable(CourseProject
         src/main.cpp
         src/core/MazeMap.cpp
+        src/core/RecursiveDivision.cpp
+        src/core/RecursiveDivision.h
 )
 
 target_link_libraries(CourseProject PRIVATE
