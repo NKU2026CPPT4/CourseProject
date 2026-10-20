@@ -5,13 +5,17 @@
 DFSGenerator::DFSGenerator(const unsigned int seed) : rng_(seed) {
 }
 
-MazeMap DFSGenerator::generate(const int rows, const int cols) {
+GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols) {
     MazeMap maze(rows, cols);
+    std::vector<MazeStep> steps;
 
     // Algorithm: dfs
     std::vector<std::pair<int, int>> trace;
     trace.emplace_back(1, 1);
     maze.set(1, 1, CellType::Passage);
+
+    // Record the first step
+    steps.push_back({.row = 1, .col = 1, .type = CellType::Passage});
 
     // Delta of position in four directions
     static constexpr int dr[] = {-2, 2, 0, 0};
@@ -20,7 +24,7 @@ MazeMap DFSGenerator::generate(const int rows, const int cols) {
     while (!trace.empty()) {
         auto [r,c] = trace.back(); // Current coordinate
 
-        std::vector<int> dirs = {0, 1, 2,3 };
+        std::vector<int> dirs = {0, 1, 2, 3};
         std::shuffle(dirs.begin(), dirs.end(), rng_);
 
         bool moved = false;
@@ -31,8 +35,14 @@ MazeMap DFSGenerator::generate(const int rows, const int cols) {
 
             // Check if the candidate is inBound and unvisited (remain CellType:Wall)
             if (maze.inInnerBound(nr, nc) && maze.at(nr, nc) == CellType::Wall) {
-                maze.set(r + dr[d] / 2, c + dc[d] / 2, CellType::Passage);
+                const int mid_r = r + dr[d] / 2;
+                const int mid_c = c + dc[d] / 2;
+
+                maze.set(mid_r, mid_c, CellType::Passage);
+                steps.push_back({mid_r, mid_c, CellType::Passage});
+
                 maze.set(nr, nc, CellType::Passage);
+                steps.push_back({nr, nc, CellType::Passage});
 
                 trace.emplace_back(nr, nc);
                 moved = true;
@@ -47,7 +57,13 @@ MazeMap DFSGenerator::generate(const int rows, const int cols) {
     }
 
     maze.setStart(1, 1);
+    steps.push_back({.row = 1, .col = 1, .type = CellType::Start});
     maze.setGoal(rows - 2, cols - 2);
+    steps.push_back({.row = rows - 2, .col = cols - 2, .type = CellType::Goal});
 
-    return maze;
+    return {maze, steps};
+}
+
+MazeMap DFSGenerator::generate(const int rows, const int cols) {
+    return generateWithSteps(rows, cols).maze;
 }
