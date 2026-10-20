@@ -24,7 +24,7 @@ CourseProject/
 │
 ├── tests/                      # Unit tests
 │   ├── CMakeLists.txt          # Test build configuration (Catch2)
-│   ├── test_maze.cpp           # Tests for MazeMap and RecursiveDivisionGenerator
+│   ├── test_maze.cpp           # Tests for MazeMap and DFSGenerator
 │   └── test_astar.cpp          # Tests for A* solver (path validity, edge cases)
 │
 ├── assets/                     # Raw materials
