@@ -3,6 +3,24 @@
 #include <random>
 
 /**
+ * @brief Represents a single step action during generation.
+ */
+struct MazeStep {
+    int row;
+    int col;
+    CellType type;
+};
+
+/**
+ * @brief The result of a maze generation process, including the final map and the animation steps.
+ */
+struct GenerationResult {
+    MazeMap maze;
+    std::vector<MazeStep> steps;
+};
+
+
+/**
  * @brief The maze generator class using the Depth-First Search (DFS) algorithm.
  *
  * This class generates a maze using the randomized DFS (backtracking) approach.
@@ -31,6 +49,15 @@ public:
      * @return MazeMap The generated maze data object.
      */
     MazeMap generate(int rows, int cols);
+
+    /**
+     * @brief Generates a maze and records every step for visualization.
+     * @param rows The total number of rows.
+     * @param cols The total number of columns.
+     * @return GenerationResult Contains the final maze and the step-by-step animation data.
+     */
+    GenerationResult generateWithSteps(int rows, int cols);
+
 
 private:
     std::mt19937 rng_; /////< Mersenne Twister random generator.
