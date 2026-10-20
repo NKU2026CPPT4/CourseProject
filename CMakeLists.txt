@@ -25,8 +25,13 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 add_executable(CourseProject
         src/main.cpp
+        src/core/MazeMap.cpp
 )
 
 target_link_libraries(CourseProject PRIVATE
         Qt6::Widgets
+)
+
+target_include_directories(CourseProject PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
