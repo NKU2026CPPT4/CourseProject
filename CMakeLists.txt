@@ -23,7 +23,7 @@ endif ()
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-add_executable(CourseProject
+add_executable(CourseProject WIN32 MACOSX_BUNDLE
         src/main.cpp
 
         src/core/MazeMap.cpp
@@ -31,6 +31,20 @@ add_executable(CourseProject
 
         src/core/DFSGenerator.cpp
         src/core/DFSGenerator.h
+
+        src/ui/MainWindow.cpp
+        src/ui/MainWindow.h
+
+        src/ui/MazeWidget.cpp
+        src/ui/MazeWidget.h
+
+        src/core/Step.h
+
+        src/core/PathFinder.h
+
+        src/core/AStarSolver.cpp
+        src/core/AStarSolver.h
+
 )
 
 target_link_libraries(CourseProject PRIVATE
