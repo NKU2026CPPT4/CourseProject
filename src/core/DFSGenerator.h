@@ -1,23 +1,7 @@
 #pragma once
 #include "core/MazeMap.h"
+#include "core/Step.h"
 #include <random>
-
-/**
- * @brief Represents a single step action during generation.
- */
-struct MazeStep {
-    int row;
-    int col;
-    CellType type;
-};
-
-/**
- * @brief The result of a maze generation process, including the final map and the animation steps.
- */
-struct GenerationResult {
-    MazeMap maze;
-    std::vector<MazeStep> steps;
-};
 
 
 /**

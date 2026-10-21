@@ -4,36 +4,29 @@
 ## Project Structure
 ```text
 CourseProject/
-├── CMakeLists.txt 
-├── README.md                   # Project documentation, rules, and TODO list
-├── .gitignore 
-│
-├── src/                        # Source code
-│   ├── core/                   # Pure algorithms and models (NO Qt dependency)
-│   │   ├── Cell.h              # Cell type definitions (Wall, Passage, Start, Goal)
-│   │   ├── MazeMap.h/.cpp      # Grid data structure, start/goal points, bounds checking
-│   │   ├── DFSGenerator.h/.cpp  # Maze generation algorithm
-│   │   └── AStarSolver.h/.cpp  # A* pathfinding algorithm, outputs search steps
+├── CMakeLists.txt
+├── README.md
+├── src/
+│   ├── main.cpp                 # 程序入口，只负责启动 MainWindow
 │   │
-│   ├── ui/                     # Qt GUI 
-│   │   ├── MainWindow.h/.cpp   # Main window, layout, signal/slot connections
-│   │   ├── MazeWidget.h/.cpp   # Custom QWidget to draw the maze and animations
-│   │   └── ControlPanel.h/.cpp # Buttons (Generate, Start, Pause, Step, Speed)
+│   ├── core/                    # 【纯 C++】核心算法，绝对不包含 Qt 头文件
+│   │   ├── MazeMap.h/.cpp       # 数据模型 (你写的)
+│   │   ├── DFSGenerator.h/.cpp  # 迷宫生成 (你写的)
+│   │   ├── AStarSolver.h/.cpp   # 寻路算法 (a 写的)
+│   │   └── Step.h               # 动画动作结构体 (你定义的)
 │   │
-│   └── main.cpp                # Entry point (initializes QApplication and MainWindow)
+│   ├── ui/                      # 【Qt 界面】只负责显示和接收用户点击
+│   │   ├── MainWindow.h/.cpp    # 主窗口，负责整体布局拼装（左画布，右面板）
+│   │   ├── MazeWidget.h/.cpp    # 画布控件，只负责把 2D 数组画成黑方块
+│   │   ├── ControlPanel.h/.cpp  # 右侧的控制面板（包含 Settings 和 Action 两个 GroupBox）
+│   │   └── StatsPanel.h/.cpp    # 右下角的统计面板（未来显示耗时、访问节点数等）
+│   │
+│   └── app/                     # 【胶水层】连接 UI 和算法的大脑
+│       └── AnimationController.h/.cpp # 负责用 QTimer 播放生成和寻路的动画
 │
-├── tests/                      # Unit tests
-│   ├── CMakeLists.txt          # Test build configuration (Catch2)
-│   ├── test_maze.cpp           # Tests for MazeMap and DFSGenerator
-│   └── test_astar.cpp          # Tests for A* solver (path validity, edge cases)
-│
-├── assets/                     # Raw materials
-│   ├── icons/                  # Button icons, start/goal markers
-│   └── styles/                 # QSS stylesheets (optional)
-│
-├── resources/                  # Qt resource files
-│   └── resources.qrc           # Maps files in assets/ to Qt resource system
-│
-└── docs/                       # Documentation
-    └── test_cases.md           # Detailed test cases documentation
+├── assets/                      # 原始素材（图标、字体）
+├── resources/                   # Qt 资源文件（.qrc、QSS 样式表）
+│   ├── resources.qrc
+│   └── style.qss                # 把你刚才的 QSS 样式抽离到这里
+└── tests/                       # 单元测试
 ```
