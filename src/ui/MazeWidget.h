@@ -1,8 +1,3 @@
 #pragma once
 #include <QWidget>
-
-class MazeWidget : public QWidget {
-    Q_OBJECT
-};
-
-
+#include "core/MazeMap.h"

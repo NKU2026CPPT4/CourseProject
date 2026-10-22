@@ -1,7 +1,11 @@
 # 人工智能与创新 (C++) 大作业
-基于深度优先搜索的随机迷宫生成与A*寻路算法的可视化实现——基于Qt的交互式平台
+
+<div style="text-align: center;"><img src="assets/icons/icon.svg" width="60px"></div>
+
+### 基于深度优先搜索的随机迷宫生成与A*寻路算法的可视化实现——基于Qt的交互式平台
 
 ## Project Structure
+
 ```text
 CourseProject/
 ├── CMakeLists.txt
@@ -30,3 +34,10 @@ CourseProject/
 │   └── style.qss                # 把你刚才的 QSS 样式抽离到这里
 └── tests/                       # 单元测试
 ```
+
+---
+
+## TODO
+
+- 算法部分: A* 算法实现
+- UI 部分: MazeWidget 绘制、控制部分、控制事件处理
