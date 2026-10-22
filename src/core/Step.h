@@ -45,5 +45,5 @@ struct SearchStep {
 struct PathfindingResult {
     bool success = false;
     std::vector<SearchStep> steps;
-    std::vector<std::pair<int, int>> path;
+    std::vector<std::pair<int, int> > path;
 };

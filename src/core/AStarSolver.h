@@ -3,5 +3,5 @@
 
 class AStarSolver : public PathFinder {
 public:
-    PathfindingResult solve(const MazeMap& maze) override; 
+    PathfindingResult solve(const MazeMap &maze) override;
 };

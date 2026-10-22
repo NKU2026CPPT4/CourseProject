@@ -83,6 +83,7 @@ public:
      * @note This updates both the grid state and the internal start coordinates.
      */
     void setStart(int row, int col);
+
     /**
      * @brief Sets the goal point of the maze.
      * @param row The row index of the goal point.

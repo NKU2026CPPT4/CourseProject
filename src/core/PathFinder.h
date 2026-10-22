@@ -14,5 +14,5 @@ public:
      * @param maze Map of the maze.
      * @return PathFindingResult The process of finding, in order to visualize.
      */
-    virtual PathfindingResult solve(const MazeMap& maze) = 0;
+    virtual PathfindingResult solve(const MazeMap &maze) = 0;
 };
