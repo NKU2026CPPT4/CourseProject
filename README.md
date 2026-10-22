@@ -13,11 +13,11 @@ CourseProject/
 ├── src/
 │   ├── main.cpp                 # 程序入口，只负责启动 MainWindow
 │   │
-│   ├── core/                    # 【纯 C++】核心算法，绝对不包含 Qt 头文件
-│   │   ├── MazeMap.h/.cpp       # 数据模型 (你写的)
-│   │   ├── DFSGenerator.h/.cpp  # 迷宫生成 (你写的)
-│   │   ├── AStarSolver.h/.cpp   # 寻路算法 (a 写的)
-│   │   └── Step.h               # 动画动作结构体 (你定义的)
+│   ├── core/                    # 核心算法
+│   │   ├── MazeMap.h/.cpp       # 数据模型
+│   │   ├── DFSGenerator.h/.cpp  # 迷宫生成
+│   │   ├── AStarSolver.h/.cpp   # 寻路算法
+│   │   └── Step.h               # 动画动作结构体
 │   │
 │   ├── ui/                      # 【Qt 界面】只负责显示和接收用户点击
 │   │   ├── MainWindow.h/.cpp    # 主窗口，负责整体布局拼装（左画布，右面板）
@@ -31,7 +31,7 @@ CourseProject/
 ├── assets/                      # 原始素材（图标、字体）
 ├── resources/                   # Qt 资源文件（.qrc、QSS 样式表）
 │   ├── resources.qrc
-│   └── style.qss                # 把你刚才的 QSS 样式抽离到这里
+│   └── style.qss
 └── tests/                       # 单元测试
 ```
 
