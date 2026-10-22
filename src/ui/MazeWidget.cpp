@@ -1,1 +1,1 @@
-#include "MazeWidget.h"
+#include "ui/MazeWidget.h"

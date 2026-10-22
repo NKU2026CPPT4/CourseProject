@@ -42,7 +42,6 @@ public:
      */
     GenerationResult generateWithSteps(int rows, int cols);
 
-
 private:
     std::mt19937 rng_; /////< Mersenne Twister random generator.
 };

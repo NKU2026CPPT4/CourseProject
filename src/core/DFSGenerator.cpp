@@ -10,7 +10,7 @@ GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols)
     std::vector<MazeStep> steps;
 
     // Algorithm: dfs
-    std::vector<std::pair<int, int>> trace;
+    std::vector<std::pair<int, int> > trace;
     trace.emplace_back(1, 1);
     maze.set(1, 1, CellType::Passage);
 
@@ -28,7 +28,7 @@ GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols)
         std::shuffle(dirs.begin(), dirs.end(), rng_);
 
         bool moved = false;
-        for (const auto d : dirs) {
+        for (const auto d: dirs) {
             const int nr = r + dr[d];
             // ReSharper disable once CppTooWideScopeInitStatement
             const int nc = c + dc[d]; // (nr, nc) is the candidate coordinate.
@@ -47,7 +47,6 @@ GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols)
                 trace.emplace_back(nr, nc);
                 moved = true;
                 break;
-
             }
         }
 

@@ -50,7 +50,7 @@ void MazeMap::setGoal(const int row, const int col) {
     }
 }
 
-void MazeMap::print(std::ostream& os) const {
+void MazeMap::print(std::ostream &os) const {
     for (int r = 0; r < rows_; ++r) {
         for (int c = 0; c < cols_; ++c) {
             if (r == startRow_ && c == startCol_) {
