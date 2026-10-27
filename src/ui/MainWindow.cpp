@@ -11,5 +11,5 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     placeholder->setAlignment(Qt::AlignCenter);
     setCentralWidget(placeholder);
 
-    statusBar()->showMessage(tr("Ready"));
+    statusBar()->showMessage(tr("Ready."));
 }
