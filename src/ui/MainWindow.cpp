@@ -8,9 +8,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle(tr("Maze Generation and Solution"));
     resize(900, 600);
 
-    //auto *placeholder = new QLabel(tr("Maze Canvas"), this);
-    //placeholder->setAlignment(Qt::AlignCenter);
-    //setCentralWidget(placeholder);
     auto mazeWidget = new MazeWidget(this);
     setCentralWidget(mazeWidget);
 
