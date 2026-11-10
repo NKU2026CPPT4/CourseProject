@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"
+     role="img" aria-label="Maze and pathfinding icon">
+  <title>CourseProject</title>
+  <desc>Flat blue app icon showing a white maze with an amber path from a green start to an orange goal.</desc>
+
+  <!-- Material Blue 800 rounded-square tile -->
+  <rect x="12" y="12" width="488" height="488" rx="108" fill="#1565C0"/>
+
+  <!-- Maze walls -->
+  <g fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="20"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M136 196 H76 V76 H196 V196"/>
+    <path d="M376 316 H436 V436 H316 V316"/>
+    <path d="M256 76 V136"/>
+    <path d="M316 76 V136"/>
+    <path d="M76 256 V316"/>
+    <path d="M256 436 H316"/>
+    <path d="M316 256 V296"/>
+  </g>
+
+  <!-- A* path -->
+  <path d="M76 436 H196 V316 H316 V196 H436 V76"
+        fill="none" stroke="#FFC107" stroke-width="36"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Start and goal nodes -->
+  <circle cx="76" cy="436" r="32" fill="#FFFFFF"/>
+  <circle cx="76" cy="436" r="23" fill="#43A047"/>
+  <circle cx="436" cy="76" r="32" fill="#FFFFFF"/>
+  <circle cx="436" cy="76" r="23" fill="#FB8C00"/>
+</svg>
