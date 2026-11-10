@@ -3,6 +3,8 @@
 #include <optional>
 #include "core/MazeMap.h"
 #include "core/Step.h"
+#include <vector>
+#include <utility>
 #include <QTimer>
 
 /**
@@ -16,6 +18,8 @@ public:
 
     void setGenerationResult(const GenerationResult &maze); // 整张图替换
     void setCell(int row, int col, CellType type);          // 改一格
+    // 设置 A* 寻路结果
+    void setPathfindingResult(const PathfindingResult& result);
 signals:
     void cellClicked(int row, int col);
 
@@ -35,4 +39,7 @@ private:
     bool playMazeGeneration_ = false;
     int animationIndex_ = 0;
     QTimer animationTimer_;
+    // A* 搜索结果
+    std::vector<SearchStep> searchSteps_;
+    std::vector<std::pair<int, int>> path_;
 };

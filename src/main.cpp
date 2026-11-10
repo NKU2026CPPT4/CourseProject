@@ -1,11 +1,12 @@
+
 #include "ui/MainWindow.h"
 #include <QApplication>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
-    MainWindow window;
 
+    MainWindow window;
     window.show();
 
-    return QApplication::exec();
+    return app.exec();
 }
