@@ -28,17 +28,22 @@ MazeWidget::MazeWidget(QWidget *parent) : QWidget(parent)
     setMinimumSize(200, 200);
 
     connect(&animationTimer_, &QTimer::timeout, this, [this]
+        {
+            if (!generationResult_ ||
+                animationIndex_ >= static_cast<int>(generationResult_->steps.size()))
             {
-                if (!generationResult_ ||
-                    animationIndex_ >= static_cast<int>(generationResult_->steps.size()))
-                {
-                    animationTimer_.stop();
-                    playMazeGeneration_=false;
-                    animationIndex_ = 0;
-                    update();
-                    return;
-                }
-                update(); }); // 设定控制绘制的QTimer
+                animationTimer_.stop();
+                playMazeGeneration_ = false;
+                animationIndex_ = 0;
+                update();
+                return;
+            }
+
+            // 每次定时器触发，播放下一步
+            ++animationIndex_;
+
+            update();
+        });
 }
 
 void MazeWidget::setGenerationResult(const GenerationResult &result)
@@ -58,6 +63,14 @@ void MazeWidget::setCell(int row, int col, CellType type)
         generationResult_->maze.set(row, col, type);
         update(cellRect(row, col));
     }
+}
+
+void MazeWidget::setPathfindingResult(const PathfindingResult& result)
+{
+    searchSteps_ = result.steps;
+    path_ = result.path;
+
+    update();
 }
 
 int MazeWidget::cellSize() const
@@ -97,39 +110,76 @@ QRect MazeWidget::mazeRect() const
     return QRect(org.x(), org.y(), generationResult_->maze.cols() * size, generationResult_->maze.rows() * size);
 }
 
-void MazeWidget::paintEvent(QPaintEvent *event)
+void MazeWidget::paintEvent(QPaintEvent* event)
 {
+    Q_UNUSED(event);
 
-    if (!playMazeGeneration_)//不播放模型生成动画
+    QPainter painter(this);
+
+    painter.fillRect(rect(), QColor(0xf0, 0xf0, 0xf0));
+
+    if (!generationResult_ || cellSize() == 0)
+        return;
+
+    const int rows = generationResult_->maze.rows();
+    const int cols = generationResult_->maze.cols();
+
+    // 绘制迷宫生成动画
+    if (playMazeGeneration_)
     {
-        QPainter painter(this);
-        const int s = cellSize();
-        const QPoint o = origin();
-        painter.fillRect(rect(), QColor(0xf0, 0xf0, 0xf0));
-        if (!generationResult_ || cellSize() == 0)
-            return;
-        for (int r = 0; r < generationResult_->maze.rows(); r++)
+        painter.fillRect(mazeRect(), QColor(0x22, 0x22, 0x22));
+
+        const int lastIndex = std::min(
+            animationIndex_,
+            static_cast<int>(generationResult_->steps.size())
+        );
+
+        for (int i = 0; i < lastIndex; i++)
         {
-            for (int c = 0; c < generationResult_->maze.cols(); c++)
-            {
-                painter.fillRect(cellRect(r, c), colorFor(generationResult_->maze.at(r, c)));
-            }
+            const auto& step = generationResult_->steps[i];
+
+            painter.fillRect(
+                cellRect(step.row, step.col),
+                colorFor(step.type)
+            );
+        }
+
+        return;
+    }
+
+    // 绘制静态迷宫
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c < cols; c++)
+        {
+            painter.fillRect(
+                cellRect(r, c),
+                colorFor(generationResult_->maze.at(r, c))
+            );
         }
     }
-    else
+
+    // 绘制 A* 最终路径：蓝色
+    for (const auto& [row, col] : path_)
     {
-        QPainter painter(this);
-        if (!generationResult_ || cellSize() == 0)
-            return;
-        const int s = cellSize();
-        const QPoint o = origin();
-        painter.fillRect(rect(), QColor(0xf0, 0xf0, 0xf0));
-        painter.fillRect(mazeRect(), QColor(0x22, 0x22, 0x22));
-        for (int i = 0; i <= animationIndex_; i++)
+        painter.fillRect(
+            cellRect(row, col),
+            QColor(0x35, 0x85, 0xe5)
+        );
+    }
+
+    // 最后重新绘制起点和终点，避免被路径颜色覆盖
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c < cols; c++)
         {
-            painter.fillRect(cellRect(generationResult_->steps[i].row, generationResult_->steps[i].col), colorFor(generationResult_->steps[i].type));
+            const CellType type = generationResult_->maze.at(r, c);
+
+            if (type == CellType::Start || type == CellType::Goal)
+            {
+                painter.fillRect(cellRect(r, c), colorFor(type));
+            }
         }
-        animationIndex_++;
     }
 }
 

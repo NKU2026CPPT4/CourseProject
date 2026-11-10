@@ -2,8 +2,6 @@
 #include <vector>
 #include <algorithm>
 
-DFSGenerator::DFSGenerator(const unsigned int seed) : rng_(seed) {
-}
 
 GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols) {
     MazeMap maze(rows, cols);
@@ -25,7 +23,7 @@ GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols)
         auto [r,c] = trace.back(); // Current coordinate
 
         std::vector<int> dirs = {0, 1, 2, 3};
-        std::shuffle(dirs.begin(), dirs.end(), rng_);
+        std::ranges::shuffle(dirs, rng_);
 
         bool moved = false;
         for (const auto d: dirs) {
@@ -61,8 +59,4 @@ GenerationResult DFSGenerator::generateWithSteps(const int rows, const int cols)
     steps.push_back({.row = rows - 2, .col = cols - 2, .type = CellType::Goal});
 
     return {maze, steps};
-}
-
-MazeMap DFSGenerator::generate(const int rows, const int cols) {
-    return generateWithSteps(rows, cols).maze;
 }

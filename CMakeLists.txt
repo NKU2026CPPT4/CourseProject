@@ -44,6 +44,7 @@ add_executable(CourseProject WIN32 MACOSX_BUNDLE
 
         src/core/AStarSolver.cpp
         src/core/AStarSolver.h
+        src/core/Generator.h
 
 )
 
