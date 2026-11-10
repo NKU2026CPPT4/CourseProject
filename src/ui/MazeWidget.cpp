@@ -2,6 +2,8 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <algorithm>
+#include <QTimer>
+#include <iostream>
 
 QColor colorFor(CellType type)
 {
@@ -24,82 +26,130 @@ QColor colorFor(CellType type)
 MazeWidget::MazeWidget(QWidget *parent) : QWidget(parent)
 {
     setMinimumSize(200, 200);
+
+    connect(&animationTimer_, &QTimer::timeout, this, [this]
+            {
+                if (!generationResult_ ||
+                    animationIndex_ >= static_cast<int>(generationResult_->steps.size()))
+                {
+                    animationTimer_.stop();
+                    playMazeGeneration_=false;
+                    animationIndex_ = 0;
+                    update();
+                    return;
+                }
+                update(); }); // 设定控制绘制的QTimer
 }
 
-void MazeWidget::setMaze(const MazeMap &maze)
+void MazeWidget::setGenerationResult(const GenerationResult &result)
 {
-    maze_ = maze;
-    update();
+    generationResult_ = result; // 设定属性
+
+    animationTimer_.stop();
+    playMazeGeneration_ = true; // 开始播放动画
+    animationIndex_ = 0;
+    animationTimer_.start(50);
 }
 
 void MazeWidget::setCell(int row, int col, CellType type)
 {
-    if (maze_ && maze_->inBound(row, col))
+    if (generationResult_ && generationResult_->maze.inBound(row, col))
     {
-        maze_->set(row, col, type);
+        generationResult_->maze.set(row, col, type);
         update(cellRect(row, col));
     }
 }
 
 int MazeWidget::cellSize() const
 {
-    if (!maze_)
+    if (!generationResult_)
         return 0;
-    const int w = width() / maze_->cols();
-    const int h = height() / maze_->rows();
+    const int w = width() / generationResult_->maze.cols();
+    const int h = height() / generationResult_->maze.rows();
     return std::min(w, h);
 }
 
 QPoint MazeWidget::origin() const
 {
-    if (!maze_)
+    if (!generationResult_)
         return QPoint(0, 0);
     const int size = cellSize();
-    const int x = (width() - size * maze_->cols()) / 2;
-    const int y = (height() - size * maze_->rows()) / 2;
+    const int x = (width() - size * generationResult_->maze.cols()) / 2;
+    const int y = (height() - size * generationResult_->maze.rows()) / 2;
     return QPoint(x, y);
 }
 
 QRect MazeWidget::cellRect(int row, int col) const
 {
-    if (!maze_)
+    if (!generationResult_)
         return QRect();
     const int size = cellSize();
     const QPoint org = origin();
     return QRect(org.x() + col * size, org.y() + row * size, size, size);
 }
 
+QRect MazeWidget::mazeRect() const
+{
+    if (!generationResult_)
+        return QRect();
+    const int size = cellSize();
+    const QPoint org = origin();
+    return QRect(org.x(), org.y(), generationResult_->maze.cols() * size, generationResult_->maze.rows() * size);
+}
+
 void MazeWidget::paintEvent(QPaintEvent *event)
 {
-    const int s = cellSize();
-    const QPoint o = origin();
-    QPainter painter(this);
-    painter.fillRect(rect(), QColor(0xf0, 0xf0, 0xf0));
-    if (!maze_ || cellSize() == 0)
-        return;
-    for (int r = 0; r < maze_->rows(); r++)
+
+    if (!playMazeGeneration_)
     {
-        for (int c = 0; c < maze_->cols(); c++)
+        QPainter painter(this);
+        const int s = cellSize();
+        const QPoint o = origin();
+        painter.fillRect(rect(), QColor(0xf0, 0xf0, 0xf0));
+        if (!generationResult_ || cellSize() == 0)
+            return;
+        for (int r = 0; r < generationResult_->maze.rows(); r++)
         {
-            painter.fillRect(cellRect(r, c), colorFor(maze_->at(r, c)));
+            for (int c = 0; c < generationResult_->maze.cols(); c++)
+            {
+                painter.fillRect(cellRect(r, c), colorFor(generationResult_->maze.at(r, c)));
+            }
         }
+    }
+    else
+    {
+        QPainter painter(this);
+        if (!generationResult_ || cellSize() == 0)
+            return;
+        const int s = cellSize();
+        const QPoint o = origin();
+        painter.fillRect(rect(), QColor(0xf0, 0xf0, 0xf0));
+        painter.fillRect(mazeRect(), QColor(0x22, 0x22, 0x22));
+        for (int i = 0; i <= animationIndex_; i++)
+        {
+            painter.fillRect(cellRect(generationResult_->steps[i].row, generationResult_->steps[i].col), colorFor(generationResult_->steps[i].type));
+        }
+        animationIndex_++;
     }
 }
 
-QSize MazeWidget::sizeHint() const {
-    return {600, 600};   // 布局系统参考的"理想尺寸"
+QSize MazeWidget::sizeHint() const
+{
+    return {600, 600}; // 布局系统参考的"理想尺寸"
 }
 
 void MazeWidget::mousePressEvent(QMouseEvent *event)
 {
-    const int s=cellSize();
-    if(!maze_ || s ==0){
+    const int s = cellSize();
+    if (!generationResult_ || s == 0)
+    {
         return;
     }
-    const QPoint p=event->position().toPoint()-origin();
-    const int col=p.x()/s;
-    const int row=p.y()/s;
-    if(maze_->inBound(row,col)){
-        emit cellClicked(row,col);
+    const QPoint p = event->position().toPoint() - origin();
+    const int col = p.x() / s;
+    const int row = p.y() / s;
+    if (generationResult_->maze.inBound(row, col))
+    {
+        emit cellClicked(row, col);
     }
 }

@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     auto mazeWidget = new MazeWidget(this);
     setCentralWidget(mazeWidget);
 
-    DFSGenerator generator(442);
-    mazeWidget->setMaze(generator.generate(21, 21));
+    DFSGenerator generator(4342);
+    mazeWidget->setGenerationResult(generator.generateWithSteps(21, 21));
 
     connect(mazeWidget, &MazeWidget::cellClicked, this, [this](int row, int col) {
         statusBar()->showMessage(tr("Cell clicked: (%1, %2)").arg(row).arg(col));
