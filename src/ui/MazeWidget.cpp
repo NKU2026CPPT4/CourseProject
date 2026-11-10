@@ -100,7 +100,7 @@ QRect MazeWidget::mazeRect() const
 void MazeWidget::paintEvent(QPaintEvent *event)
 {
 
-    if (!playMazeGeneration_)
+    if (!playMazeGeneration_)//不播放模型生成动画
     {
         QPainter painter(this);
         const int s = cellSize();
