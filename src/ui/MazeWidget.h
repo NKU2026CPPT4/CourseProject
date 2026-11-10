@@ -20,6 +20,13 @@ public:
     void setCell(int row, int col, CellType type);          // 改一格
     // 设置 A* 寻路结果
     void setPathfindingResult(const PathfindingResult &result);
+
+    // 迷宫生成动画
+    void playMazeGeneration(int intervalMs);
+
+    // 寻路动画
+    void playPathFinding(int intervalMs);
+
 signals:
     void cellClicked(int row, int col);
 
@@ -35,14 +42,15 @@ private:
     [[nodiscard]] QRect cellRect(int row, int col) const;
     [[nodiscard]] QRect mazeRect() const;
     std::optional<GenerationResult> generationResult_;
+
     bool playMazeGeneration_ = false;
     int animationIndex_ = 0;
-    void playMazeGeneration(int intervalMs);
     QTimer animationTimer_; // 迷宫生成动画
+
     bool playPathFinding_ = false;
     int pathFindingIndex_ = 0;
-    void playPathFinding(int intervalMs);
     QTimer pathFindingTimer_; // 寻路动画
+
     // A* 搜索结果
     std::vector<SearchStep> searchSteps_;
     std::vector<std::pair<int, int>> path_;

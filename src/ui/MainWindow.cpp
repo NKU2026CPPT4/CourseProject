@@ -17,13 +17,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     setCentralWidget(mazeWidget);
 
     // 第一步：生成迷宫
-    DFSGenerator generator(4342);
+    std::random_device rd;
+    DFSGenerator generator(rd());
 
     GenerationResult generationResult =
         generator.generateWithSteps(21, 21);
 
     // 将迷宫交给界面显示
     mazeWidget->setGenerationResult(generationResult);
+    mazeWidget->playMazeGeneration(50);
 
     // 第二步：创建 A* 寻路算法对象
     AStarSolver solver;
@@ -34,6 +36,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     // 第四步：将寻路结果交给界面
     mazeWidget->setPathfindingResult(pathResult);
+    mazeWidget->playPathFinding(60);
 
     // 显示寻路结果
     if (pathResult.success)

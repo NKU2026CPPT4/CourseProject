@@ -23,12 +23,28 @@ QColor colorFor(CellType type)
     }
 }
 
+QColor colorFor(SearchState type)
+{
+    switch (type)
+    {
+
+    case SearchState::Closed:
+        return QColor(128, 128, 128);//Grey
+    case SearchState::Open:
+        return QColor(165, 42, 42);//Brown
+    case SearchState::Path:
+        return QColor(0x35, 0x85, 0xe5);
+    default:
+        return QColor(0xff, 0xff, 0xff);
+    }
+}
+
 MazeWidget::MazeWidget(QWidget *parent) : QWidget(parent)
 {
     setMinimumSize(200, 200);
 
     connect(&animationTimer_, &QTimer::timeout, this, [this]
-        {
+            {
             if (!generationResult_ ||
                 animationIndex_ >= static_cast<int>(generationResult_->steps.size()))
             {
@@ -42,18 +58,49 @@ MazeWidget::MazeWidget(QWidget *parent) : QWidget(parent)
             // 每次定时器触发，播放下一步
             ++animationIndex_;
 
-            update();
-        });
+            update(); });
+
+    connect(&pathFindingTimer_, &QTimer::timeout, this, [this]
+            {
+            if (searchSteps_.size()==0 ||
+                pathFindingIndex_ >= static_cast<int>(searchSteps_.size()))
+            {
+                pathFindingTimer_.stop();
+                playPathFinding_ = false;
+                pathFindingIndex_ = 0;
+                update();
+                return;
+            }
+
+            // 每次定时器触发，播放下一步
+            ++pathFindingIndex_;
+
+            update(); });
+}
+
+void MazeWidget::playMazeGeneration(int intervalMs)
+{
+    pathFindingTimer_.stop();
+    animationTimer_.stop();
+    playPathFinding_ = false;
+    playMazeGeneration_ = true; // 开始播放迷宫生成动画
+    animationIndex_ = 0;
+    animationTimer_.start(intervalMs);
+}
+
+void MazeWidget::playPathFinding(int intervalMs)
+{
+    animationTimer_.stop();
+    pathFindingTimer_.stop();
+    playMazeGeneration_ = false;
+    playPathFinding_ = true; // 开始播放寻路动画
+    pathFindingIndex_ = 0;
+    pathFindingTimer_.start(intervalMs);
 }
 
 void MazeWidget::setGenerationResult(const GenerationResult &result)
 {
     generationResult_ = result; // 设定属性
-
-    animationTimer_.stop();
-    playMazeGeneration_ = true; // 开始播放动画
-    animationIndex_ = 0;
-    animationTimer_.start(50);
 }
 
 void MazeWidget::setCell(int row, int col, CellType type)
@@ -65,12 +112,11 @@ void MazeWidget::setCell(int row, int col, CellType type)
     }
 }
 
-void MazeWidget::setPathfindingResult(const PathfindingResult& result)
+void MazeWidget::setPathfindingResult(const PathfindingResult &result)
 {
     searchSteps_ = result.steps;
     path_ = result.path;
 
-    update();
 }
 
 int MazeWidget::cellSize() const
@@ -110,7 +156,7 @@ QRect MazeWidget::mazeRect() const
     return QRect(org.x(), org.y(), generationResult_->maze.cols() * size, generationResult_->maze.rows() * size);
 }
 
-void MazeWidget::paintEvent(QPaintEvent* event)
+void MazeWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
@@ -129,19 +175,17 @@ void MazeWidget::paintEvent(QPaintEvent* event)
     {
         painter.fillRect(mazeRect(), QColor(0x22, 0x22, 0x22));
 
-        const int lastIndex = std::min(
+        int lastIndex = std::min(
             animationIndex_,
-            static_cast<int>(generationResult_->steps.size())
-        );
+            static_cast<int>(generationResult_->steps.size()));
 
         for (int i = 0; i < lastIndex; i++)
         {
-            const auto& step = generationResult_->steps[i];
+            const auto &step = generationResult_->steps[i];
 
             painter.fillRect(
                 cellRect(step.row, step.col),
-                colorFor(step.type)
-            );
+                colorFor(step.type));
         }
 
         return;
@@ -154,18 +198,39 @@ void MazeWidget::paintEvent(QPaintEvent* event)
         {
             painter.fillRect(
                 cellRect(r, c),
-                colorFor(generationResult_->maze.at(r, c))
-            );
+                colorFor(generationResult_->maze.at(r, c)));
         }
     }
 
+    if (path_.size() == 0)
+    {
+        return;
+    } // 无path应当退出
+
+    // 绘制迷宫生成动画
+    if (playPathFinding_)
+    {
+        int lastIndex = std::min(
+            pathFindingIndex_,
+            static_cast<int>(searchSteps_.size()));
+        for (int i = 0; i < lastIndex; i++)
+        {
+            const auto &step = searchSteps_[i];
+
+            painter.fillRect(
+                cellRect(step.row, step.col),
+                colorFor(step.state));
+        }
+
+        return;
+    }
+
     // 绘制 A* 最终路径：蓝色
-    for (const auto& [row, col] : path_)
+    for (const auto &[row, col] : path_)
     {
         painter.fillRect(
             cellRect(row, col),
-            QColor(0x35, 0x85, 0xe5)
-        );
+            QColor(0x35, 0x85, 0xe5));
     }
 
     // 最后重新绘制起点和终点，避免被路径颜色覆盖
