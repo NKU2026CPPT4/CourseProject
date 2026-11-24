@@ -39,5 +39,4 @@ CourseProject/
 
 ## TODO
 
-- 算法部分: A* 算法实现
-- UI 部分: MazeWidget 绘制、控制部分、控制事件处理
+- UI 部分: 控制部分、控制事件处理
