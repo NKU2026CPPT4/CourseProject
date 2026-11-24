@@ -101,6 +101,7 @@ void MazeWidget::playPathFinding(int intervalMs)
 void MazeWidget::setGenerationResult(const GenerationResult &result)
 {
     generationResult_ = result; // 设定属性
+    update();
 }
 
 void MazeWidget::setCell(int row, int col, CellType type)
@@ -116,7 +117,12 @@ void MazeWidget::setPathfindingResult(const PathfindingResult &result)
 {
     searchSteps_ = result.steps;
     path_ = result.path;
+}
 
+void MazeWidget::setPathfindingResult()
+{
+    searchSteps_.clear();
+    path_.clear();
 }
 
 int MazeWidget::cellSize() const
