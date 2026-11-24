@@ -2,39 +2,36 @@
 
 #include <QLabel>
 #include <QStatusBar>
+#include <QToolBar>
+#include <QPushButton>
 
 #include "core/DFSGenerator.h"
 #include "core/AStarSolver.h"
 #include "ui/MazeWidget.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
+void MainWindow::generateMaze()
 {
-    setWindowTitle(tr("Maze Generation and Solution"));
-    resize(900, 600);
-
-    // 创建迷宫绘制组件
-    auto mazeWidget = new MazeWidget(this);
-    setCentralWidget(mazeWidget);
-
-    // 第一步：生成迷宫
+    mazeWidget->setPathfindingResult();
     std::random_device rd;
     DFSGenerator generator(rd());
 
-    GenerationResult generationResult =
+    generationResult =
         generator.generateWithSteps(21, 21);
 
     // 将迷宫交给界面显示
-    mazeWidget->setGenerationResult(generationResult);
+    mazeWidget->setGenerationResult(*generationResult);
     mazeWidget->playMazeGeneration(50);
+}
 
-    // 第二步：创建 A* 寻路算法对象
+void MainWindow::findPath()
+{ 
     AStarSolver solver;
 
-    // 第三步：运行 A* 算法
+    // 运行 A* 算法
     PathfindingResult pathResult =
-        solver.solve(generationResult.maze);
+        solver.solve(generationResult->maze);
 
-    // 第四步：将寻路结果交给界面
+    // 将寻路结果交给界面
     mazeWidget->setPathfindingResult(pathResult);
     mazeWidget->playPathFinding(60);
 
@@ -45,20 +42,39 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
             static_cast<int>(pathResult.path.size()) - 1;
 
         statusBar()->showMessage(
-            tr("A* found a path! Path length: %1").arg(pathLength)
-        );
+            tr("A* 找到了一条路径! 路径长度: %1").arg(pathLength));
     }
     else
     {
-        statusBar()->showMessage(tr("A* could not find a path."));
+        statusBar()->showMessage(tr("A* 无法找到一条路径."));
     }
+    
+}
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+{
+    setWindowTitle(tr("迷宫生成与寻路可视化"));
+    resize(900, 600);
+
+    // 创建迷宫绘制组件
+    mazeWidget = new MazeWidget(this);
+    setCentralWidget(mazeWidget);
+
+    // 创建toolbar
+    auto *toolbar = new QToolBar(tr("工具栏"), this);
+    addToolBar(toolbar);
+
+    auto *generateButton = new QPushButton(tr("生成迷宫"), toolbar);
+    toolbar->addWidget(generateButton);
+    connect(generateButton, &QPushButton::clicked, this, &MainWindow::generateMaze);
+
+    auto *findPathButton = new QPushButton(tr("寻找路径"), toolbar);
+    toolbar->addWidget(findPathButton);
+    connect(findPathButton, &QPushButton::clicked, this, &MainWindow::findPath);
 
     // 鼠标点击事件
     connect(mazeWidget, &MazeWidget::cellClicked,
-        this, [this](int row, int col)
-        {
-            statusBar()->showMessage(
-                tr("Cell clicked: (%1, %2)").arg(row).arg(col)
-            );
-        });
+            this, [this](int row, int col)
+            { statusBar()->showMessage(
+                  tr("格子被点击: (%1, %2)").arg(row).arg(col)); });
 }
